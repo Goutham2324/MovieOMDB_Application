@@ -209,11 +209,16 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="jfo-gg-3AC">
+                                <rect key="frame" x="186.66666666666666" y="416" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="XS3-MZ-zIW"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="jfo-gg-3AC" firstAttribute="centerY" secondItem="kpN-s0-YtW" secondAttribute="centerY" id="7Hz-EO-X50"/>
                             <constraint firstItem="5pl-sd-j67" firstAttribute="top" secondItem="Mna-yw-ooh" secondAttribute="bottom" constant="24" id="810-QW-rfc"/>
+                            <constraint firstItem="jfo-gg-3AC" firstAttribute="centerX" secondItem="kpN-s0-YtW" secondAttribute="centerX" id="Jdm-DX-xgb"/>
                             <constraint firstItem="h3s-G5-P1B" firstAttribute="leading" secondItem="XS3-MZ-zIW" secondAttribute="leading" constant="16" id="MJ2-a5-5UY"/>
                             <constraint firstItem="XS3-MZ-zIW" firstAttribute="trailing" secondItem="h3s-G5-P1B" secondAttribute="trailing" constant="16" id="Mu9-oU-IjL"/>
                             <constraint firstItem="XS3-MZ-zIW" firstAttribute="trailing" secondItem="5pl-sd-j67" secondAttribute="trailing" constant="16" id="OdF-pA-htH"/>
@@ -231,6 +236,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="jfo-gg-3AC" id="8IK-i5-guc"/>
                         <outlet property="movieDescriptionTextView" destination="5pl-sd-j67" id="9sK-B1-sKL"/>
                         <outlet property="movieGenreLbl" destination="h3s-G5-P1B" id="K4n-bm-WDz"/>
                         <outlet property="movieImageView" destination="smz-3u-jsK" id="uX8-B7-Raj"/>

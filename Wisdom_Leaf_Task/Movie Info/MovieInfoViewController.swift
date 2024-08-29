@@ -15,7 +15,7 @@ class MovieInfoViewController: UIViewController {
     @IBOutlet weak var movieGenreLbl: UILabel!
     @IBOutlet weak var movieRatingLbl: UILabel!
     @IBOutlet weak var movieDescriptionTextView: UITextView!
-    
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     var movieInfoViewModel = MovieInfoViewModel()
     
     var movieInfo: String?
@@ -23,6 +23,10 @@ class MovieInfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         movieDescriptionTextView.isUserInteractionEnabled = false
+        
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
+        
         configureView()
         movieInfoViewModel.delegate = self
     }
@@ -42,6 +46,8 @@ extension MovieInfoViewController: MovieInfo {
             self.movieGenreLbl.text = self.movieInfoViewModel.movieInfo?.genre
             self.movieRatingLbl.text = self.movieInfoViewModel.movieInfo?.imdbRating
             self.movieDescriptionTextView.text = self.movieInfoViewModel.movieInfo?.plot
+            self.activityIndicator.stopAnimating()
+            self.activityIndicator.isHidden = true
         }
     }
 }

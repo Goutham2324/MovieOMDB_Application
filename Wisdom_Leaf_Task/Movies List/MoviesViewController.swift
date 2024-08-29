@@ -14,6 +14,7 @@ class MoviesViewController: UIViewController {
     @IBOutlet weak var moviesTableView: UITableView!
     
     let moviesViewModel = MoviesViewModel()
+    let activityIndicator = UIActivityIndicatorView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,7 +29,12 @@ class MoviesViewController: UIViewController {
 extension MoviesViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let movieText = searchBar.text else { return }
+        activityIndicator.style = .medium
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
         moviesViewModel.getMoviesWithSearch(for: movieText)
+        activityIndicator.stopAnimating()
+        activityIndicator.isHidden = true
         searchBar.resignFirstResponder()
     }
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
