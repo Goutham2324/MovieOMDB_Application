@@ -14,17 +14,33 @@ class FavouriteMoviesViewController: UIViewController {
     
     private var favoriteViewModel: FavoriteMoviesViewModel = FavoriteMoviesViewModel()
     var savedMovies: [Movie] = []
+    var imageCache = ImageCache()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
+        
+        favoriteMovieCollectionView.dataSource = self
+        favoriteMovieCollectionView.delegate = self
+        favoriteViewModel.delegate = self
+        loadSavedMovies()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        favoriteViewModel.loadSavedMovies()
-        favoriteMovieCollectionView.dataSource = self
-        favoriteMovieCollectionView.delegate = self
-        favoriteMovieCollectionView.reloadData()
+        super.viewWillAppear(animated)
+        loadSavedMovies()
     }
+    
+    private func loadSavedMovies() {
+        favoriteViewModel.loadSavedMovies()
+    }
+}
 
+extension FavouriteMoviesViewController: FavoriteMovieViewModelProtocol {
+    func didUpdateMovie() {
+        DispatchQueue.main.async {
+            self.savedMovies = self.favoriteViewModel.savedMovies
+            self.favoriteMovieCollectionView.reloadData()
+        }
+    }
 }

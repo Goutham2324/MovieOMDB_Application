@@ -16,58 +16,70 @@ extension MoviesViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MovieTableViewCell", for: indexPath) as! MovieTableViewCell
         let movieData = moviesViewModel.moviesData[indexPath.row]
-        cell.favoriteBtn.tag = indexPath.row
-        cell.favoriteBtn.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        
+        // Configure the cell with movie data and image cache
         cell.configureCell(movie: movieData, cache: moviesViewModel.imageCache)
         
-        if !movieData.poster.isEmpty, let imageUrl = URL(string: movieData.poster) {
-                   let task = URLSession.shared.dataTask(with: imageUrl) { data, response, error in
-                       // Ensure the downloaded image data belongs to the current cell
-                       if let data = data, let image = UIImage(data: data) {
-                           DispatchQueue.main.async {
-                               if tableView.cellForRow(at: indexPath) == cell {
-                                   cell.moviePosterImgView.image = image
-                               }
-                           }
-                       } else {
-                           DispatchQueue.main.async {
-                               cell.moviePosterImgView.image = UIImage(named: "splash_image")
-                           }
-                       }
-                   }
-                   task.resume()
-               } else {
-                   cell.moviePosterImgView.image = UIImage(named: "defaultimg")
-               }
-               
-               cell.selectionStyle = .none
-
+        // Configure the favorite button
+        cell.favoriteBtn.tag = indexPath.row
+        cell.favoriteBtn.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        
+        cell.selectionStyle = .none
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil) 
-        let vc = storyboard.instantiateViewController(withIdentifier: "MovieInfoViewController") as! MovieInfoViewController
-        tableView.deselectRow(at: indexPath, animated: false)
-        vc.movieInfo = moviesViewModel.moviesData[indexPath.row].imdbID
-        self.navigationController?.pushViewController(vc, animated: true)
+        let movieData = moviesViewModel.moviesData[indexPath.row]
+        let imdbID = movieData.imdbID
 
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let vc = storyboard.instantiateViewController(withIdentifier: "MovieInfoViewController") as? MovieInfoViewController else {
+            print("Error: Could not instantiate MovieInfoViewController from storyboard.")
+            return
+        }
+        
+        tableView.deselectRow(at: indexPath, animated: false)
+        vc.movieInfo = imdbID
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
-    
     @objc func buttonTapped(_ sender: UIButton) {
-        let userDefaults = UserDefaults.standard
-        let movies = moviesViewModel.moviesData // Assuming moviesData is an array of Movie objects
+        let rowIndex = sender.tag
         
-        do {
-            // Encode the movies array into Data
-            let encodedMovies = try JSONEncoder().encode(movies)
-            // Save the encoded data to UserDefaults
-            userDefaults.set(encodedMovies, forKey: "favoriteCollection")
-            print("Movies saved successfully.")
-        } catch {
-            print("Failed to encode movies: \(error)")
+        // Ensure the index is within bounds
+        guard rowIndex >= 0 && rowIndex < moviesViewModel.moviesData.count else {
+            print("Invalid row index.")
+            return
+        }
+        
+        let movie = moviesViewModel.moviesData[rowIndex]
+        var savedMovies: [Movie] = []
+        
+        let userDefaults = UserDefaults.standard
+        
+        if let savedMoviesData = userDefaults.data(forKey: "favoriteCollection") {
+            do {
+                savedMovies = try JSONDecoder().decode([Movie].self, from: savedMoviesData)
+            } catch {
+                print("Failed to decode saved movies: \(error)")
+            }
+        }
+        
+        if !savedMovies.contains(where: { $0.imdbID == movie.imdbID }) {
+            savedMovies.append(movie)
+            
+            do {
+                // Encode the updated movies array into Data
+                let encodedMovies = try JSONEncoder().encode(savedMovies)
+                // Save the updated array to UserDefaults
+                userDefaults.set(encodedMovies, forKey: "favoriteCollection")
+                print("Movie saved successfully: \(movie)")
+            } catch {
+                print("Failed to encode movies: \(error)")
+            }
+        } else {
+            print("Movie is already in the favorites.")
         }
     }
 

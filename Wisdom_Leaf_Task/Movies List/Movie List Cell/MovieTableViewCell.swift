@@ -18,20 +18,35 @@ class MovieTableViewCell: UITableViewCell {
     func configureCell(movie: Movie, cache: ImageCache) {
         movieTitle.text = movie.title
         movieReleaseDate.text = movie.year
-        if let url = URL(string: movie.poster) {
-            cache.toGetImage(from: url) { result in
+        
+        // Set default or placeholder image first
+        moviePosterImgView.image = UIImage(named: "default_image")
+        
+        // Check for valid URL
+        guard let url = URL(string: movie.poster) else {
+            moviePosterImgView.image = UIImage(named: "splash_image")
+            return
+        }
+        
+        // Fetch image from cache or download if not available
+        if let cachedImage = cache.getImage(for: url) {
+            // If the image is already cached, use it
+            self.moviePosterImgView.image = cachedImage
+        } else {
+            // Download image if it's not in cache
+            cache.downloadImage(from: url) { [weak self] result in
                 DispatchQueue.main.async {
                     switch result {
                     case .success(let image):
-                        self.moviePosterImgView.image = image
-                    case .failure(let failure):
-                        self.moviePosterImgView.image = UIImage(named: "splash_image")
+                        self?.moviePosterImgView.image = image
+                    case .failure:
+                        self?.moviePosterImgView.image = UIImage(named: "splash_image")
                     }
                 }
             }
         }
     }
-    
 }
+
 
 
