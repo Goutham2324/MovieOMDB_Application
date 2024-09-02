@@ -86,6 +86,12 @@
                                     <outlet property="delegate" destination="I5f-j1-VPj" id="7dX-gz-b6g"/>
                                 </connections>
                             </searchBar>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ulm-Cf-mUV">
+                                <rect key="frame" x="175.66666666666666" y="415.66666666666669" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="lmo-jl-HSu">
                                 <rect key="frame" x="0.0" y="159" width="393" height="610"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -151,6 +157,8 @@
                         <constraints>
                             <constraint firstItem="lmo-jl-HSu" firstAttribute="top" secondItem="QQb-RD-Fbe" secondAttribute="bottom" id="6K6-K5-mjv"/>
                             <constraint firstItem="QQb-RD-Fbe" firstAttribute="top" secondItem="ciG-m0-6d1" secondAttribute="top" id="6hD-ge-k7H"/>
+                            <constraint firstItem="Ulm-Cf-mUV" firstAttribute="centerY" secondItem="yJa-me-Ck1" secondAttribute="centerY" id="7PZ-rv-312"/>
+                            <constraint firstItem="Ulm-Cf-mUV" firstAttribute="centerX" secondItem="yJa-me-Ck1" secondAttribute="centerX" id="NgY-Fs-7ae"/>
                             <constraint firstItem="QQb-RD-Fbe" firstAttribute="leading" secondItem="ciG-m0-6d1" secondAttribute="leading" constant="16" id="Ula-Sy-yEG"/>
                             <constraint firstItem="lmo-jl-HSu" firstAttribute="leading" secondItem="ciG-m0-6d1" secondAttribute="leading" id="Y6R-2Y-orM"/>
                             <constraint firstItem="ciG-m0-6d1" firstAttribute="bottom" secondItem="lmo-jl-HSu" secondAttribute="bottom" id="YvE-Nh-o6b"/>
@@ -162,6 +170,7 @@
                     <connections>
                         <outlet property="moviesTableView" destination="lmo-jl-HSu" id="nS2-rA-iAd"/>
                         <outlet property="searchBar" destination="QQb-RD-Fbe" id="p4c-p6-pNp"/>
+                        <outlet property="searchForMoviesLbl" destination="Ulm-Cf-mUV" id="fqh-Bp-pRb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Co-Tk-jb7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

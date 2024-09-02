@@ -12,6 +12,7 @@ class MoviesViewController: UIViewController {
     
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var moviesTableView: UITableView!
+    @IBOutlet weak var searchForMoviesLbl: UILabel!
     
     let moviesViewModel = MoviesViewModel()
     let activityIndicator = UIActivityIndicatorView()
@@ -22,6 +23,17 @@ class MoviesViewController: UIViewController {
         moviesTableView.delegate = self
         moviesTableView.dataSource = self
         moviesViewModel.delegate = self
+        
+        moviesTableView.isHidden = true
+        searchForMoviesLbl.text = "Search for any movies using search bar"
+        setupActivityIndicator()
+    }
+    
+    private func setupActivityIndicator() {
+        activityIndicator.style = .medium
+        activityIndicator.center = self.view.center
+        activityIndicator.isHidden = true
+        view.addSubview(activityIndicator)
     }
     
 }
@@ -29,12 +41,10 @@ class MoviesViewController: UIViewController {
 extension MoviesViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let movieText = searchBar.text else { return }
-        activityIndicator.style = .medium
         activityIndicator.isHidden = false
         activityIndicator.startAnimating()
+        searchForMoviesLbl.isHidden = true
         moviesViewModel.getMoviesWithSearch(for: movieText)
-        activityIndicator.stopAnimating()
-        activityIndicator.isHidden = true
         searchBar.resignFirstResponder()
     }
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
@@ -44,8 +54,19 @@ extension MoviesViewController: UISearchBarDelegate {
 
 extension MoviesViewController: MoviesViewModelProtocol {
     func didMoviesUpdate() {
-        DispatchQueue.main.async {
-            self.moviesTableView.reloadData()
+            DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
+                self.activityIndicator.isHidden = true
+                
+                if self.moviesViewModel.moviesData.isEmpty {
+                    self.moviesTableView.isHidden = true
+                    self.searchForMoviesLbl.isHidden = false
+                    self.searchForMoviesLbl.text = "Search results are not found."
+                } else {
+                    self.moviesTableView.isHidden = false
+                    self.searchForMoviesLbl.isHidden = true
+                    self.moviesTableView.reloadData()
+                }
+            }
         }
-    }
 }
