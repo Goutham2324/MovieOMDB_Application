@@ -15,6 +15,7 @@ class MoviesViewController: UIViewController {
     @IBOutlet weak var searchForMoviesLbl: UILabel!
     
     let moviesViewModel = MoviesViewModel()
+    let fireBaseAnalytics = FireBaseAnalyticsForMovies()
     let activityIndicator = UIActivityIndicatorView()
     
     override func viewDidLoad() {
@@ -45,6 +46,8 @@ extension MoviesViewController: UISearchBarDelegate {
         activityIndicator.startAnimating()
         searchForMoviesLbl.isHidden = true
         moviesViewModel.getMoviesWithSearch(for: movieText)
+        fireBaseAnalytics.logMovieSearchEvent(movieName: movieText)
+        fireBaseAnalytics.storeNumberOfTimesMovieSearched(movieName: movieText)
         searchBar.resignFirstResponder()
     }
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
